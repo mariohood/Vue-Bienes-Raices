@@ -4,9 +4,12 @@
   import { useFirestore } from 'vuefire'
   import { useRouter } from 'vue-router'
   import { validationSchema, imageSchema } from '@/validation/propiedadSchema'
+  import useImage from '@/composables/useImage'
 
 
   const items = [1,2,3,4,5]
+
+  const { uploadImage } = useImage()
 
   const router = useRouter()
   const db = useFirestore()
@@ -72,7 +75,8 @@
         prepend-icon="mdi-camera"
         class="mb-5"
         v-model="imagen.value.value"
-        :error-messages="imagen.errorMessage.value"        
+        :error-messages="imagen.errorMessage.value"   
+        @changes="uploadImage"     
       />
 
       <v-text-field

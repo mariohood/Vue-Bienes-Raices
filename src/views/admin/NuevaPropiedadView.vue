@@ -1,15 +1,20 @@
 <script setup>
+  
   import { useForm, useField } from 'vee-validate'
   import { collection, addDoc  } from 'firebase/firestore'
   import { useFirestore } from 'vuefire'
   import { useRouter } from 'vue-router'
   import { validationSchema, imageSchema } from '@/validation/propiedadSchema'
   import useImage from '@/composables/useImage'
+  import useLocationMap from '@/composables/useLocationMap'
+  import "leaflet/dist/leaflet.css"
+  import { LMap, LTileLayer, LMarker } from "@vue-leaflet/vue-leaflet"
 
-
+  
   const items = [1,2,3,4,5]
 
   const { url, uploadImage, image } = useImage()
+  const { zoom, center, pin } = useLocationMap()
 
   const router = useRouter()
   const db = useFirestore()
@@ -38,8 +43,10 @@
 
     const docRef = await addDoc(collection(db, "propiedades"), {
       ...propiedad,
-      imagen: url.value
+      imagen: url.value,
+      ubicacion:center.value
     });
+
     if(docRef.id){
       router.push({name: 'admin-propiedades'})
     }
@@ -144,6 +151,26 @@
         v-model="alberca.value.value"
         :error-messages="alberca.errorMessage.value"
         />
+
+      <h2 class="font-weight-bold text-center my-5">Ubicación</h2>
+      <div class="pb-10">
+        <div style="height:600px">
+          <LMap 
+            v-model:zoom="zoom" 
+            :center="center" 
+            :use-global-leaflet="false"
+          >
+            <LMarker
+              :lat-lng="center"
+              draggable
+              @moveend="pin"
+              />
+            <LTileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            ></LTileLayer>
+          </LMap>
+        </div>
+      </div>
 
       <v-btn
         color="pink-accent-3"

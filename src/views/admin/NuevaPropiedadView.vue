@@ -9,7 +9,6 @@
   import useLocationMap from '@/composables/useLocationMap'
   import "leaflet/dist/leaflet.css"
   import { LMap, LTileLayer, LMarker } from "@vue-leaflet/vue-leaflet"
-
   
   const items = [1,2,3,4,5]
 
@@ -91,7 +90,7 @@
         <p class="font-weight-bold">Imagen Propiedad:</p>
         <img class="w-50" :src="image"  alt="Propiedad atual"/>
       </div>
- 
+
       <v-text-field
         class="mb-5"
         label="Precio"
